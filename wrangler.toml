@@ -2,15 +2,10 @@ name = "nextjs-prisma-app"
 compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
 
-pages_build_output_dir = ".vercel/output/static"
-
-[env.production.vars]
+[vars]
 NODE_ENV = "production"
 
-[[env.production.d1_databases]]
+[[d1_databases]]
 binding = "DB"
 database_name = "nextjs-prisma-app-db"
-database_id = "your-database-id"
-
-[build]
-command = "npx @cloudflare/next-on-pages@1"
+database_id = "242a5c26-18a8-4e98-98cf-0f5d86d764af"

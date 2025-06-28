@@ -13,6 +13,7 @@
     "cf:deploy": "wrangler pages deploy .vercel/output/static"
   },
   "dependencies": {
+    "@prisma/adapter-d1": "^6.10.1",
     "@prisma/client": "^6.10.1",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-dialog": "^1.1.14",

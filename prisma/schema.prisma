@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -27,7 +27,7 @@ model User {
 model Post {
   id        String   @id @default(cuid())
   title     String
-  content   String?  @db.Text
+  content   String?
   published Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -43,8 +43,8 @@ model StressTest {
   threads         Int      @default(10)
   duration        Int      @default(60)
   rateLimit       Int      @default(100)
-  payload         String?  @db.Text
-  headers         String?  @db.Text
+  payload         String?
+  headers         String?
   followRedirects Boolean  @default(true)
   timeout         Int      @default(30)
   status          String   @default("idle")
@@ -65,7 +65,7 @@ model TestResult {
   avgResponseTime   Float      @default(0)
   bandwidth         Float      @default(0)
   errors            Int        @default(0)
-  statusCodes       String?    @db.Text
+  statusCodes       String?
   createdAt         DateTime   @default(now())
   test              StressTest @relation(fields: [testId], references: [id], onDelete: Cascade)
 }
@@ -74,8 +74,8 @@ model TestLog {
   id        String     @id @default(cuid())
   testId    String
   type      String
-  message   String     @db.Text
-  details   String?    @db.Text
+  message   String
+  details   String?
   createdAt DateTime   @default(now())
   test      StressTest @relation(fields: [testId], references: [id], onDelete: Cascade)
 }
