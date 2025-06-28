@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]
+  stressTests StressTest[]
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String?  @db.Text
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+}
+
+model StressTest {
+  id              String   @id @default(cuid())
+  name            String
+  targetUrl       String
+  method          String   @default("GET")
+  threads         Int      @default(10)
+  duration        Int      @default(60)
+  rateLimit       Int      @default(100)
+  payload         String?  @db.Text
+  headers         String?  @db.Text
+  followRedirects Boolean  @default(true)
+  timeout         Int      @default(30)
+  status          String   @default("idle")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  createdBy       User     @relation(fields: [userId], references: [id])
+  userId          String
+  results         TestResult[]
+  logs            TestLog[]
+}
+
+model TestResult {
+  id                String     @id @default(cuid())
+  testId            String     @unique
+  requestsSent      Int        @default(0)
+  responsesReceived Int        @default(0)
+  successRate       Float      @default(0)
+  avgResponseTime   Float      @default(0)
+  bandwidth         Float      @default(0)
+  errors            Int        @default(0)
+  statusCodes       String?    @db.Text
+  createdAt         DateTime   @default(now())
+  test              StressTest @relation(fields: [testId], references: [id], onDelete: Cascade)
+}
+
+model TestLog {
+  id        String     @id @default(cuid())
+  testId    String
+  type      String
+  message   String     @db.Text
+  details   String?    @db.Text
+  createdAt DateTime   @default(now())
+  test      StressTest @relation(fields: [testId], references: [id], onDelete: Cascade)
+}
